@@ -204,4 +204,72 @@ describe("Exchange", () => {
       });
     });
   });
+  describe("Order actions", async () => {
+    let transaction, result;
+    let amount = tokens(1);
+    beforeEach(async () => {
+      transaction = await token1
+        .connect(user1)
+        .approve(exchange.address, amount);
+      result = await transaction.wait();
+
+      transaction = await exchange
+        .connect(user1)
+        .depositToken(token1.address, amount);
+      result = await transaction.wait();
+
+      transaction = await exchange
+        .connect(user1)
+        .makeOrder(token2.address, tokens(1), token1.address, tokens(1));
+      result = await transaction.wait();
+    });
+    describe("Cancelling orders", async () => {
+      describe("Success", async () => {
+        beforeEach(async () => {
+          transaction = await exchange.connect(user1).cancelOrder(1);
+          result = await transaction.wait();
+        });
+
+        it("updates canceled order", async () => {
+          expect(await exchange.orderCancelled(1)).to.equal(true);
+        });
+
+        it("emits an Order event", async () => {
+          const event = result.events[0];
+
+          expect(event.event).to.equal("Cancel");
+          const args = event.args;
+          expect(args.id).to.equal(1);
+          expect(args.user).to.equal(user1.address);
+          expect(args.tokenGet).to.equal(token2.address);
+          expect(args.amountGet).to.equal(tokens(1));
+          expect(args.tokenGive).to.equal(token1.address);
+          expect(args.amountGive).to.equal(tokens(1));
+          expect(args.timestamp).to.least(1);
+        });
+      });
+      describe("Failure", async () => {
+        it("Rejects invalid order ids", async () => {
+          transaction = await token1
+            .connect(user1)
+            .approve(exchange.address, amount);
+          result = await transaction.wait();
+
+          transaction = await exchange
+            .connect(user1)
+            .depositToken(token1.address, amount);
+          result = await transaction.wait();
+
+          transaction = await exchange
+            .connect(user1)
+            .makeOrder(token2.address, tokens(1), token1.address, tokens(1));
+          result = await transaction.wait();
+
+          const invalidOrderId = 99999;
+          await expect(exchange.connect(user1).cancelOrder(invalidOrderId)).to
+            .be.reverted;
+        });
+      });
+    });
+  });
 });
