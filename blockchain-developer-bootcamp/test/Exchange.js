@@ -12,12 +12,14 @@ describe("Exchange", () => {
   let token1;
   let token2;
   let user1;
+  let user2;
   const feePercent = 10;
   beforeEach(async () => {
     accounts = await ethers.getSigners();
     deployer = accounts[0];
     feeAccount = accounts[1];
     user1 = accounts[2];
+    user2 = accounts[3];
     const Exchange = await ethers.getContractFactory("Exchange");
     const Token = await ethers.getContractFactory("Token");
     exchange = await Exchange.deploy(feeAccount.address, feePercent);
@@ -249,25 +251,13 @@ describe("Exchange", () => {
         });
       });
       describe("Failure", async () => {
-        it("Rejects invalid order ids", async () => {
-          transaction = await token1
-            .connect(user1)
-            .approve(exchange.address, amount);
-          result = await transaction.wait();
-
-          transaction = await exchange
-            .connect(user1)
-            .depositToken(token1.address, amount);
-          result = await transaction.wait();
-
-          transaction = await exchange
-            .connect(user1)
-            .makeOrder(token2.address, tokens(1), token1.address, tokens(1));
-          result = await transaction.wait();
-
+        it("rejects invalid order ids", async () => {
           const invalidOrderId = 99999;
           await expect(exchange.connect(user1).cancelOrder(invalidOrderId)).to
             .be.reverted;
+        });
+        it("rejects unauthorized cancelations", async () => {
+          await expect(exchange.connect(user2).cancelOrder(1)).to.be.reverted;
         });
       });
     });
