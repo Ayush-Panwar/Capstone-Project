@@ -8,9 +8,12 @@ import {
   loadAccount,
   loadTokens,
   loadExchange,
+  subscribeToEvents,
 } from "../store/interactions";
+
 import Navbar from "./Navbar";
 import Markets from "./Market";
+import Balance from "./Balance";
 
 function App() {
   const dispatch = useDispatch();
@@ -43,6 +46,7 @@ function App() {
       exchangeConfig.address,
       dispatch
     );
+    subscribeToEvents(exchange, dispatch);
   };
 
   useEffect(() => {
@@ -56,7 +60,7 @@ function App() {
         <section className="exchange__section--left grid">
           {<Markets />}
 
-          {/* Balance */}
+          {<Balance />}
 
           {/* Order */}
         </section>
