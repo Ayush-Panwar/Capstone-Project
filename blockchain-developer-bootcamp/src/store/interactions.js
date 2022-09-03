@@ -181,7 +181,7 @@ export const makeSellOrder = async (
 ) => {
   const tokenGet = tokens[1].address;
   const amountGet = ethers.utils.parseUnits(
-    (order.amount * order.price).toString,
+    (order.amount * order.price).toString(),
     18
   );
   const tokenGive = tokens[0].address;
