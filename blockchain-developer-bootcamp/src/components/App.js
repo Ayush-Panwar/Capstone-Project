@@ -9,6 +9,7 @@ import {
   loadTokens,
   loadExchange,
   subscribeToEvents,
+  loadAllOrders,
 } from "../store/interactions";
 
 import Navbar from "./Navbar";
@@ -48,6 +49,11 @@ function App() {
       exchangeConfig.address,
       dispatch
     );
+
+    // Fetch all orders:open,filled,cancelled
+    loadAllOrders(provider, exchange, dispatch);
+
+    //Listen to events
     subscribeToEvents(exchange, dispatch);
   };
 
