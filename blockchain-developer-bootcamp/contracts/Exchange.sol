@@ -103,7 +103,7 @@ function makeOrder(address _tokenGet,uint256 _amountGet,address _tokenGive,uint2
  
  orderCount++;
    orders[orderCount] =_Order(
-  1,
+  orderCount,
   msg.sender,
   _tokenGet,
   _amountGet,

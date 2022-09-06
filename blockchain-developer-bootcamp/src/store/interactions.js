@@ -118,11 +118,13 @@ export const loadAllOrders = async (provider, exchange, dispatch) => {
   //Fetch filled orders
   const tradeStream = await exchange.queryFilter("Trade", 0, block);
   const filledOrders = tradeStream.map((event) => event.args);
+
   dispatch({ type: "FILLED_ORDERS_LOADED", filledOrders });
 
   //Fetch all ORDERS
   const orderStream = await exchange.queryFilter("Order", 0, block);
   const allOrders = orderStream.map((event) => event.args);
+
   dispatch({ type: "ALL_ORDERS_LOADED", allOrders });
 };
 

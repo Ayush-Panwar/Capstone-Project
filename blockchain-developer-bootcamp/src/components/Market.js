@@ -3,7 +3,6 @@ import config from "../config.json";
 import { loadTokens } from "../store/interactions";
 const Markets = () => {
   const marketHandler = async (e) => {
-    console.log("Hello");
     loadTokens(provider, e.target.value.split(","), dispatch);
   };
   const chainId = useSelector((state) => state.provider.chainId);
