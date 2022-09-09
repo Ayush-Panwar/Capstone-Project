@@ -36,7 +36,6 @@ const Trades = () => {
           <tbody>
             {filledOrders &&
               filledOrders.map((order, index) => {
-                console.log(order);
                 return (
                   <tr key={index}>
                     <td>{order.formattedTimestamp}</td>
