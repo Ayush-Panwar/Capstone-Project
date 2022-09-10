@@ -21,9 +21,9 @@ const openOrders = (state) => {
     const orderFilled = filled.some(
       (o) => o.id.toString() === order.id.toString()
     );
-    const orderCancelled = cancelled.some(
-      (o) => o.id.toString() === order.id.toString()
-    );
+    const orderCancelled = cancelled.some((o) => {
+      return o.id.toString() === order.id.toString();
+    });
 
     return orderFilled || orderCancelled;
   });
