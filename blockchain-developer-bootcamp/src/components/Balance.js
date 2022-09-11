@@ -94,7 +94,7 @@ const Balance = () => {
   useEffect(() => {
     if (exchange && tokens[0] && tokens[1] && account)
       loadBalances(exchange, tokens, account, dispatch);
-  }, [exchange, tokens, account, transferInProgress]);
+  }, [exchange, tokens, account, transferInProgress, dispatch]);
 
   return (
     <div className="component exchange__transfers">
@@ -193,7 +193,8 @@ const Balance = () => {
               : (e) => withdrawHandler(e, tokens[1])
           }
         >
-          <label htmlFor="token1"></label>
+          <label htmlFor="token1"></label>{" "}
+          <label htmlFor="token0">{symbols && symbols[1]} Amount</label>
           <input
             type="text"
             id="token1"
@@ -201,7 +202,6 @@ const Balance = () => {
             value={token2TransferAmount}
             onChange={(e) => amountHandler(e, tokens[1])}
           />
-
           <button className="button" type="submit">
             <span>
               {isDeposit ? <span>Deposit</span> : <span>Withdraw </span>}
